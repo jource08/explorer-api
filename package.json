@@ -1,0 +1,18 @@
+{
+  "name": "explorer-api",
+  "version": "0.1.0",
+  "description": "Simple API with Folder and File entities",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "author": "RangawakDev",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  }
+}
