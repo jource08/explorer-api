@@ -1,0 +1,20 @@
+CREATE TABLE folders (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  parent_id INTEGER REFERENCES folders(id) ON DELETE CASCADE,
+  is_hidden BOOLEAN DEFAULT FALSE,
+  icon VARCHAR(100) DEFAULT 'folder',
+  created_at TIMESTAMP DEFAULT NOW(),
+  modified_at TIMESTAMP
+);
+
+CREATE TABLE files (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  type VARCHAR(50),
+  size INTEGER NOT NULL,
+  folder_id INTEGER REFERENCES folders(id) ON DELETE CASCADE,
+  is_hidden BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP DEFAULT NOW(),
+  modified_at TIMESTAMP
+);
