@@ -4,7 +4,7 @@ const { Folder, File } = require('../db/index');
 const getAllExpanded = async (req, res) => {
   try {
     const maxLevel = req.query.maxLevel ? parseInt(req.query.maxLevel, 10) : 100; // Default to 100 if not provided
-    const folderData = await getFolderWithSubfolders(null, 0, maxLevel); // Start with root folders (parentId is null)
+    const folderData = await getFolderWithSubfolders(null, 0, maxLevel, ""); // Start with root folders (parentId is null)
     res.json(folderData);
   } catch (error) {
     console.error('Error fetching expanded folder structure:', error);
@@ -13,7 +13,7 @@ const getAllExpanded = async (req, res) => {
 };
 
 // Recursive function to get folders and their subfolders/files with level tracking
-const getFolderWithSubfolders = async (parentId, currentLevel, maxLevel) => {
+const getFolderWithSubfolders = async (parentId, currentLevel, maxLevel, currentPath) => {
   // Stop recursion if max level is reached
   if (currentLevel > maxLevel) return [];
 
@@ -29,7 +29,11 @@ const getFolderWithSubfolders = async (parentId, currentLevel, maxLevel) => {
     const files = await folder.getFiles(); // Use Sequelize association method to get files
     folder.dataValues.files = files;
 
-    const subFolders = await getFolderWithSubfolders(folder.id, currentLevel + 1, maxLevel); // Increment the level
+    // Create the full path for the current folder
+    const newPath = currentPath ? `${currentPath}/${folder.name}` : folder.name;
+    folder.dataValues.fullPath = newPath; // Attach the full path to the current folder
+
+    const subFolders = await getFolderWithSubfolders(folder.id, currentLevel + 1, maxLevel, newPath); // Increment the level
     folder.dataValues.subFolders = subFolders; // Attach subfolders to the current folder
   }
 
